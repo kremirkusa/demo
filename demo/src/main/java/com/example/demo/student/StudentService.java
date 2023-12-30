@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -65,5 +66,34 @@ public class StudentService {
 
             student.setEmail(email);
         }
+    }
+
+    public List<Student> getStudentById(Long id) {
+        return Collections.singletonList(studentRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Student with id " + id + " does not exist")));
+    }
+
+    public List<Student> getStudentByName(String name) {
+        return studentRepository.findByNameStartingWith(name);
+    }
+
+    public List<Student> getStudentByEmail(String email) {
+        return studentRepository.findByEmailStartingWith(email);
+    }
+
+    public List<Student> getStudentsBornBetween(String dobAfter, String dobBefore) {
+        LocalDate after = LocalDate.parse(dobAfter);
+        LocalDate before = LocalDate.parse(dobBefore);
+        return studentRepository.findByDobBetween(after, before);
+    }
+
+    public List<Student> getStudentsBornAfter(String dobAfter) {
+        LocalDate after = LocalDate.parse(dobAfter);
+        return studentRepository.findByDobAfter(after);
+    }
+
+    public List<Student> getStudentsBornBefore(String dobBefore) {
+        LocalDate before = LocalDate.parse(dobBefore);
+        return studentRepository.findByDobBefore(before);
     }
 }
