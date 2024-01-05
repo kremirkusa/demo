@@ -2,14 +2,17 @@ package com.example.demo.student;
 
 
 
+import com.example.demo.course.Course;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 @Entity
 @Table
 public class Student {
+
     @Id
     @SequenceGenerator(
             name = "student_sequence",
@@ -24,6 +27,8 @@ public class Student {
     private String name;
     private String email;
     private LocalDate dob;
+    @ManyToMany(mappedBy = "students")
+    private List<Course> courses;
     @Transient
     private Integer age;
 
@@ -84,6 +89,14 @@ public class Student {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 
     @Override

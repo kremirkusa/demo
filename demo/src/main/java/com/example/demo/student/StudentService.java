@@ -1,5 +1,6 @@
 package com.example.demo.student;
 
+import com.example.demo.course.Course;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -7,10 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class StudentService {
@@ -22,8 +20,25 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
-    public List<Student> getStudents(){
-        return studentRepository.findAll();
+    public List<StudentDto> getStudents(){
+
+        List<Student> students = studentRepository.findAll();
+        List<StudentDto> studentDtos = new ArrayList<>();
+        for (Student student : students) {
+            List<Long> coursesIds = new ArrayList<>();
+            for (Course course: student.getCourses()) {
+                coursesIds.add(course.getId());
+            }
+            StudentDto studentDto = new StudentDto(
+                    student.getName(),
+                    student.getEmail(),
+                    student.getDob(),
+                    coursesIds
+            );
+            studentDtos.add(studentDto);
+        }
+        return studentDtos;
+
     }
 
     public void addNewStudent(Student student) {
